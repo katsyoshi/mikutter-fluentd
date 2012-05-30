@@ -16,7 +16,10 @@ Plugin::create(:fluentd) do
     if m
       @logger.post("timeline", m.to_hash)
     end
+  end
 
+  on_favorite do |s, u, m|
+    @logger.post("favorited", m.to_hash)
   end
 
   settings 'fluentd' do
