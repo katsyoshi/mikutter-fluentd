@@ -19,6 +19,8 @@ Plugin::create(:fluentd) do
   end
 
   on_favorite do |s, u, m|
+    fluent = m.to_hash
+    m[:favoritedby] = u
     @logger.post("favorited", m.to_hash)
   end
 
