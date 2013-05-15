@@ -24,6 +24,12 @@ Plugin::create(:fluentd) do
     @logger.post("favorited", m.to_hash)
   end
 
+  on_appear do |message|
+    message.map do |msg|
+      @logger.post("appear", msg.to_hash)
+    end
+  end
+
   settings 'fluentd' do
     input "fluentd host", :fluentd_host
     adjustment "port number", :fluentd_port, 1024, 0xffff
