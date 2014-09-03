@@ -6,22 +6,19 @@ Plugin::create(:fluentd) do
     UserConfig[:fluentd_port] ||= 24224
     UserConfig[:fluentd_host] ||= '127.0.0.1'
 
-    @logger = Fluent::Logger::FluentLogger.open('mikutter',
-                                                :host=>UserConfig[:fluentd_host],
-                                                :port=>UserConfig[:fluentd_port])
+    @logger = Fluent::Logger::FluentLogger.open('mikutter', host: UserConfig[:fluentd_host], port: UserConfig[:fluentd_port])
   end
 
   on_update do |s, m|
-    m = m.first
-    if m
-      @logger.post("timeline", m.to_hash)
+    if msg = m.first
+      @logger.post("timeline", msg.to_hash)
     end
   end
 
   on_favorite do |s, u, m|
-    fluent = m.to_hash
     m[:favoritedby] = u
-    @logger.post("favorited", m.to_hash)
+    msg = m
+    @logger.post("favorited", msg.to_hash)
   end
 
   on_appear do |message|
